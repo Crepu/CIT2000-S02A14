@@ -40,4 +40,17 @@ class Fila
 	}
 
 	Grupo salida(int disp)
+	{
+		Grupo *aux = ini;
+		while(aux != null)
+		{
+			if(aux->cantidad > disp)
+			{
+				aux = aux->sig;
+			}
+			else
+				break;
+		}
+		
+	}
 };
