@@ -11,78 +11,73 @@ public:
 	}
 };
 
+class Lista
+{
+	Nodo *head;
+
+	Lista()
+	{
+		head = null;
+	}
+
+	void enlistar(int x)
+	{
+		Nodo *nuevo = new Nodo(x);
+		nuevo->sig = head;
+		head = nuevo;
+	}
+
+	int desenlistar()
+	{
+		int r = head->cantidad;
+		Nodo *aux = head;
+		head = aux->sig;
+		delete(aux);
+		return r;
+	}
+
+	int estaVacia()
+	{
+		return head == null;
+	}
+};
 class ColaUrgencia
 {
-	Nodo *ini;
-	Nodo *fin;
+	Lista *graves;
+	Lista *leves;
 
 	ColaUrgencia()
 	{
-		ini = null;
-		fin = null;
+		graves = new Lista();
+		leves = new Lista();
 	}
 
 	void encolarUrgencia(int nivel)
 	{
 		if(nivel==0 || nivel==3) return;
-		Nodo *nuevo = new Nodo(nivel);
-		if(ini == null)
+		if(nivel == 1)
 		{
-			ini = nuevo;
-		} 
-		else
-		{
-			fin->sig = nuevo;
+			leves->enlistar(nivel);
 		}
-
-		fin = nuevo;
-
+		else
+			graves->enlistar(nivel);
 	}
 
-	Nodo desencolarUrgencia(int disp)
+	int desencolarUrgencia()
 	{
-		//Buscar gravedad 2
-		Nodo *aux = ini;
-		Nodo ant_aux;
-		while(aux != null)
+		if(!(graves->estaVacia()))
 		{
-			if(aux->cantidad == 1)
-			{
-				ant_aux = aux;
-				aux = aux->sig;
-			}
-			else
-			{
-				//El elegido esta al inicio
-				if(ini == aux)
-				{
-					ini = aux->sig;
-					aux->sig = null;
-					return aux;
-				}
-
-				//El elegido esta al final
-				if(fin == aux)
-				{
-					fin = ant_aux;
-					fin->sig = null;
-					return aux;
-				}
-				//El elegido esta al medio 
-				ant_aux->sig = aux->sig;
-				aux->sig = null;
-				return aux;
-			}
+			return graves->desenlistar();
 		}
-		//No hay ningún 2
-		Nodo *aux = ini;
-		ini = aux->sig;
-		aux->sig = null;
-		return aux;
+		if(!(leves->estaVacia()))
+		{
+			return leves->desenlistar();
+		}
+		return null;
 	}
 
 	bool estaVaciaUrgencia()
 	{
-		return ini == null;
+		return (graves->estaVacia() && leves->estaVacia());
 	}
 };
